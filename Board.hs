@@ -25,3 +25,16 @@ row w f = row (w - 1) f ++ [(f (w - 1), Blank)]
 
 get :: Row -> Column -> Board -> Cell
 get r c b = (b !! r) !! c
+
+--Selects the correct row [Cell] containing the cell then passes it to setHelper
+set :: Row -> Column -> State -> Board -> Board
+--Handles invalid input
+set 0 _ _ _ = Error
+set _ 0 _ _ = Error
+set row col state (x:xs) | row == 1   = (setHelper col state x) : xs
+                         | otherwise  = x : (set (row - 1) col state xs)
+
+--Handles modifying the state of the correct Cell in the given row **Should only be called by the set function**
+setHelper :: Column -> State -> [Cell] -> [Cell]
+setHelper col state (x:xs) | col == 1  = ((fst x), state) : xs
+                           | otherwise = x : (setHelper (col - 1) state xs)
