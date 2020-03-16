@@ -2,7 +2,8 @@ module Board (
    Board,
    Cell,
    board,
-   get
+   get,
+   set
 ) where
 
 import Types
@@ -28,9 +29,8 @@ get r c b = (b !! r) !! c
 
 --Selects the correct row [Cell] containing the cell then passes it to setHelper
 set :: Row -> Column -> State -> Board -> Board
-set row col state (x:xs) | row < 0 `or` col < 0    = Error
-                         | row == 0             = (setHelper col state x) : xs
-                         | otherwise            = x : (set (row - 1) col state xs)
+set row col state (x:xs) | row == 0                    = (setHelper col state x) : xs
+                         | otherwise                   = x : (set (row - 1) col state xs)
 
 --Handles modifying the state of the correct Cell in the given row **Should only be called by the set function**
 setHelper :: Column -> State -> [Cell] -> [Cell]
