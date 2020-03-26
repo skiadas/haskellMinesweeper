@@ -1,6 +1,7 @@
 module BoardTest
 (
-   runTests
+   tests,
+   main
 ) where
 
 import Test.HUnit
@@ -26,5 +27,7 @@ tests = TestList [
       get 0 4 (set 0 4 Flagged myBoard) ~?= (Safe, Flagged)
    ]
 
-runTests = do runTestTT tests
-              return ()
+-- Only use if you want to run the tests in this file only
+main = do
+   runTestTT tests
+   return ()
