@@ -4,7 +4,9 @@ module Board (
    board,
    get,
    set,
-   cellToChar
+   cellToChar,
+   rowToString,
+   boardToStrings
 ) where
 
 import Types
@@ -47,3 +49,9 @@ cellToChar (Safe, Revealed x) = intToDigit x
 cellToChar (_,Blank) = ' '
 cellToChar (_,Flagged) = '\128681'
 cellToChar (_,Questioned) = '\63'
+
+rowToString :: [Cell] -> String
+rowToString = map cellToChar
+
+boardToStrings :: [[Cell]] -> [String]
+boardToStrings = map rowToString
