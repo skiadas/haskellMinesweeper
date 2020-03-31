@@ -3,10 +3,12 @@ module Board (
    Cell,
    board,
    get,
-   set
+   set,
+   cellToChar
 ) where
 
 import Types
+import Data.Char
 
 type Board = [[Cell]]
 type Cell = (Ground, State)
@@ -37,3 +39,11 @@ set row col state (x:xs) | row < 0 || col < 0 = []
 setHelper :: Column -> State -> [Cell] -> [Cell]
 setHelper col state (x:xs) | col == 0  = ((fst x), state) : xs
                            | otherwise = x : (setHelper (col - 1) state xs)
+
+--Takes a cell and converts it to a representitive character in Unicode
+cellToChar :: Cell -> Char
+cellToChar (Mine, Revealed x) = '\128163'
+cellToChar (Safe, Revealed x) = intToDigit x
+cellToChar (_,Blank) = ' '
+cellToChar (_,Flagged) = '\128681'
+cellToChar (_,Questioned) = '\63'
