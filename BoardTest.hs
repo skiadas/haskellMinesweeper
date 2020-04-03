@@ -14,6 +14,18 @@ f _ _ = Safe
 
 myBoard = board 3 5 f
 
+--Simple Test Boards for boardIsDone tests
+--False Boards
+board1F = [[(Safe , Blank) , (Mine, Blank)]]
+board2F = [[(Safe , Blank) , (Mine, Blank)] , [(Safe, Revealed 1) , (Mine, Blank)]]
+board3F = [[(Safe , Blank) , (Mine, Blank)] , [(Safe, Revealed 1) , (Safe, Revealed 1)] , [(Mine , Blank) , (Mine , Blank)]]
+board4F = [[(Mine , Blank) , (Mine , Blank)] , [(Safe , Revealed 1) , (Safe, Revealed 1)] , [(Mine, Blank) , (Safe , Blank)]]
+--True Boards
+board1T = [[(Safe , Revealed 1) , (Mine, Blank)]]
+board2T = [[(Safe , Revealed 1) , (Mine, Blank)], [(Safe, Revealed 1) , (Mine, Blank)]]
+board3T = [[(Safe , Revealed 1) , (Mine, Blank)], [(Safe, Revealed 1) , (Safe, Revealed 1)] , [(Mine, Blank) , (Mine , Blank)]]
+board4T = [[(Mine , Blank) , (Mine , Blank)] , [(Safe , Revealed 1) , (Safe, Revealed 1)] , [(Mine, Blank) , (Safe , Revealed 1)]]
+
 tests = TestList [
    "myBoard" ~: TestList [
       get 1 2 myBoard ~?= (Mine, Blank),
@@ -39,6 +51,18 @@ tests = TestList [
       cellToChar (Safe, Flagged) ~?= '\128681',
       cellToChar (Mine, Questioned) ~?= '\63',
       cellToChar (Safe, Questioned) ~?= '\63'
+      ],
+  "boardIsDone" ~: TestList [
+      --Testing boardIsDone on False Boards
+      boardIsDone board1F ~?= False,
+      boardIsDone board2F ~?= False,
+      boardIsDone board3F ~?= False,
+      boardIsDone myBoard ~?= False,
+      --Testing boardIsDone on True Boards
+      boardIsDone board1T ~?= True,
+      boardIsDone board2T ~?= True,
+      boardIsDone board3T ~?= True,
+      boardIsDone board4T ~?= True
       ]
    ]
 

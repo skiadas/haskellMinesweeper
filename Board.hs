@@ -6,7 +6,8 @@ module Board (
    set,
    cellToChar,
    rowToString,
-   boardToStrings
+   boardToStrings,
+   boardIsDone
 ) where
 
 import Types
@@ -56,14 +57,17 @@ rowToString = map cellToChar
 boardToStrings :: [[Cell]] -> [String]
 boardToStrings = map rowToString
 
+--Checks if a game board is completed
 boardIsDone :: Board -> Bool
 boardIsDone [] = True
 boardIsDone (clist:rest) = (rowIsDone clist) && (boardIsDone rest)
 
+--Helper for boardIsDone
 rowIsDone :: [Cell] -> Bool
 rowIsDone [] = True
 rowIsDone (cell : rest) = (isDone cell) && (rowIsDone rest)
 
+-- Helper for rowIsDone
 isDone :: Cell -> Bool
 isDone (Mine, _)       = True
 isDone (_, Revealed _) = True
