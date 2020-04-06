@@ -7,7 +7,10 @@ module Board (
    cellToChar,
    rowToString,
    boardToStrings,
-   boardIsDone
+   boardIsDone,
+   createHorizontalWall,
+   addVerticalWalls,
+   addWalls
 ) where
 
 import Types
@@ -72,3 +75,21 @@ isDone :: Cell -> Bool
 isDone (Mine, _)       = True
 isDone (_, Revealed _) = True
 isDone _               = False
+
+printBoard :: Board -> IO ()
+printBoard = sequence_ . map putStrLn . addWalls . boardToStrings
+
+-- Helpers for printBoard
+createHorizontalWall :: Int -> String
+createHorizontalWall n = '+' : replicate n '-' ++ "+"
+
+addVerticalWalls :: String -> String
+addVerticalWalls s = '|' : s ++ "|"
+
+addWalls :: [String] -> [String]
+addWalls [] = [ "++", "++" ]
+addWalls s = end : middle ++ [end]
+                where end = createHorizontalWall len
+                      len = length $ head s
+                      middle = map addVerticalWalls s
+                      
