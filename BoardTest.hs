@@ -63,14 +63,6 @@ tests = TestList [
       boardIsDone board2T ~?= True,
       boardIsDone board3T ~?= True,
       boardIsDone board4T ~?= True
-      ],
-  "printBoard" ~: TestList [
-      createHorizontalWall 0 ~?= "++",
-      createHorizontalWall 4 ~?= "+----+",
-      addVerticalWalls "" ~?= "||",
-      addVerticalWalls "word" ~?= "|word|",
-      addWalls [] ~?= [ "++", "++" ],
-      addWalls [ "abc", "xyz" ] ~?= [ "+---+", "|abc|", "|xyz|", "+---+" ]
       ]
    ]
 
