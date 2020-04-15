@@ -10,11 +10,13 @@ module Board (
    boardIsDone,
    createHorizontalWall,
    addVerticalWalls,
-   addWalls
+   addWalls,
+   stringAct
 ) where
 
 import Types
 import Data.Char
+import System.IO
 
 type Board = [[Cell]]
 type Cell = (Ground, State)
@@ -92,4 +94,33 @@ addWalls s = end : middle ++ [end]
                 where end = createHorizontalWall len
                       len = length $ head s
                       middle = map addVerticalWalls s
+-- String to Act Helper and IO Action
+
+stringAct :: String -> Act
+stringAct "Flag" = Flag
+stringAct "flag" = Flag
+stringAct "F" = Flag
+stringAct "f" = Flag
+stringAct "Reveal" = Reveal
+stringAct "reveal" = Reveal
+stringAct "R" = Reveal
+stringAct "r" = Reveal
+stringAct "Question" = Question
+stringAct "question" = Question
+stringAct "Q" = Question
+stringAct "q" = Question
+stringAct _ = error "Input does not match an act"
+
+makeAction :: IO Action
+makeAction = do
+   print "Please type desired row:"
+   hFlush stdout
+   r <- getLine
+   let row = read r
+   print "Please type desired column:"
+   c <- getLine
+   let column = read c
+   print "Please type desired act:"
+   a <- getLine
+   return (row,column,stringAct a)
                       

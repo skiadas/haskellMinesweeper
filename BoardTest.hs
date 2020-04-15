@@ -71,6 +71,27 @@ tests = TestList [
       addVerticalWalls "word" ~?= "|word|",
       addWalls [] ~?= [ "++", "++" ],
       addWalls [ "abc", "xyz" ] ~?= [ "+---+", "|abc|", "|xyz|", "+---+" ]
+      ],
+   "stringAct" ~: TestList [
+      stringAct "Flag" ~?= Flag,
+      stringAct "flag" ~?= Flag,
+      stringAct "F" ~?= Flag,
+      stringAct "f" ~?= Flag,
+      stringAct "Reveal" ~?= Reveal,
+      stringAct "reveal" ~?= Reveal,
+      stringAct "R" ~?= Reveal,
+      stringAct "r" ~?= Reveal,
+      stringAct "Question" ~?= Question,
+      stringAct "question" ~?= Question,
+      stringAct "Q" ~?= Question,
+      stringAct "q" ~?= Question,
+      stringAct "g" ~?= error "Input does not match an act",
+      stringAct "rabbit" ~?= error "Input does not match an act",
+      stringAct "bunny" ~?= error "Input does not match an act",
+      stringAct "questioned" ~?= error "Input does not match an act",
+      stringAct "revealed" ~?= error "Input does not match an act",
+      stringAct "flagged" ~?= error "Input does not match an act",
+      stringAct "failed" ~?= error "Input does not match an act"
       ]
    ]
 
