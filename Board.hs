@@ -112,20 +112,20 @@ countMines c = 0
 
 -- String to Act Helper and IO Action
 
-stringAct :: String -> Act
-stringAct "Flag" = Flag
-stringAct "flag" = Flag
-stringAct "F" = Flag
-stringAct "f" = Flag
-stringAct "Reveal" = Reveal
-stringAct "reveal" = Reveal
-stringAct "R" = Reveal
-stringAct "r" = Reveal
-stringAct "Question" = Question
-stringAct "question" = Question
-stringAct "Q" = Question
-stringAct "q" = Question
-stringAct _ = error "Input does not match an act"
+stringAct :: String -> Maybe Act
+stringAct "Flag" = Just Flag
+stringAct "flag" = Just Flag
+stringAct "F" = Just Flag
+stringAct "f" = Just Flag
+stringAct "Reveal" = Just Reveal
+stringAct "reveal" = Just Reveal
+stringAct "R" = Just Reveal
+stringAct "r" = Just Reveal
+stringAct "Question" = Just Question
+stringAct "question" = Just Question
+stringAct "Q" = Just Question
+stringAct "q" = Just Question
+stringAct _ = Nothing
 
 makeAction :: IO Action
 makeAction = do
@@ -137,6 +137,8 @@ makeAction = do
    c <- getLine
    let column = read c
    print "Please type desired act:"
-   a <- getLine
-   return (row,column,stringAct a)
+   x <- getLine
+   case (stringAct x) of
+      Just a -> return (row,column,a)
+      Nothing -> makeAction
                       
