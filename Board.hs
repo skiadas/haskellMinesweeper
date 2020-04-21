@@ -96,13 +96,13 @@ addWalls s = end : middle ++ [end]
                       middle = map addVerticalWalls s
                       
                       
-getNeighbors :: Row -> Col -> Board -> Int
+getNeighbors :: row -> col -> board -> Int
 getNeighbors r c board = 0
 
 getSafe :: row -> col -> board -> Maybe Cell
 getSafe r c board = Nothing
 
-neighborcoords :: row -> col -> [(row, col)], 
+neighborcoords :: row -> col -> [(row, col)] 
 --neighborcoords 0 0 = [(-1,-1), (-1,0),...] 8 things
 neighborcoords _ _ = []
 
