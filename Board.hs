@@ -11,7 +11,8 @@ module Board (
    createHorizontalWall,
    addVerticalWalls,
    addWalls,
-   stringAct
+   stringAct,
+   boardWithBombs
 ) where
 
 import Types
@@ -141,4 +142,7 @@ makeAction = do
    case (stringAct x) of
       Just a -> return (row,column,a)
       Nothing -> makeAction
+      
+boardWithBombs :: Height -> Width -> Int -> IO (Row -> Column -> Ground)
+boardWithBombs h w b = return (\r c -> Safe) --Todo Issue #13
                       
