@@ -12,12 +12,13 @@ module Board (
    addVerticalWalls,
    addWalls,
    stringAct,
-   boardWithBombs
+   buildBoard
 ) where
 
 import Types
 import Data.Char
 import System.IO
+import System.Random
 
 type Board = [[Cell]]
 type Cell = (Ground, State)
@@ -143,6 +144,24 @@ makeAction = do
       Just a -> return (row,column,a)
       Nothing -> makeAction
       
-boardWithBombs :: Height -> Width -> Int -> IO (Row -> Column -> Ground)
-boardWithBombs h w b = return (\r c -> Safe) --Todo Issue #13
-                      
+-- Build random board with bombs
+
+buildBoard :: RandomGen g => g -> Int -> Int -> Int -> (Board, g)
+buildBoard gen n h w = let (bombs, gen') = bombsLocations gen n h w
+                       in (boardFromBombList h w bombs, gen')
+
+bombLocation :: RandomGen g => g -> Int -> Int -> ((Row, Column), g)
+bombLocation gen numRows numCols = let (r, gen') = randomR (0, numRows - 1) gen
+                                       (c, gen'') = randomR (0, numCols - 1) gen'
+                                   in ((r, c), gen'')                                       
+
+bombsLocations :: RandomGen g => g -> Int -> Int -> Int -> ([(Row, Column)], g)
+bombsLocations gen 0 _ _             = ([], gen)
+bombsLocations gen n numRows numCols = let (p, gen') = bombLocation gen numRows numCols
+                                           (rest, gen'') = bombsLocations gen (n - 1) numRows numCols
+                                       in if p `elem` rest
+                                          then bombsLocations gen'' n numRows numCols
+                                          else (p:rest, gen'')
+
+boardFromBombList :: Height -> Width -> [(Row, Column)] -> Board
+boardFromBombList h w ps = board h w (\r c -> if (r, c) `elem` ps then Mine else Safe)
