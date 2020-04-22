@@ -12,7 +12,9 @@ module Board (
    addVerticalWalls,
    addWalls,
    stringAct,
-   buildBoard
+   makeAction,
+   buildBoard,
+   printBoard
 ) where
 
 import Types
@@ -158,7 +160,7 @@ bombLocation gen numRows numCols = let (r, gen') = randomR (0, numRows - 1) gen
 bombsLocations :: RandomGen g => g -> Int -> Int -> Int -> ([(Row, Column)], g)
 bombsLocations gen 0 _ _             = ([], gen)
 bombsLocations gen n numRows numCols = let (p, gen') = bombLocation gen numRows numCols
-                                           (rest, gen'') = bombsLocations gen (n - 1) numRows numCols
+                                           (rest, gen'') = bombsLocations gen' (n - 1) numRows numCols
                                        in if p `elem` rest
                                           then bombsLocations gen'' n numRows numCols
                                           else (p:rest, gen'')
