@@ -11,12 +11,16 @@ module Board (
    createHorizontalWall,
    addVerticalWalls,
    addWalls,
-   stringAct
+   stringAct,
+   makeAction,
+   buildBoard,
+   printBoard
 ) where
 
 import Types
 import Data.Char
 import System.IO
+import System.Random
 
 type Board = [[Cell]]
 type Cell = (Ground, State)
@@ -96,20 +100,24 @@ addWalls s = end : middle ++ [end]
                       middle = map addVerticalWalls s
                       
                       
+
 getNeighbors :: Row -> Col -> Board -> Int
 getNeighbors r c board = length $ neighborcoords r c
-                         
 
 getSafe :: row -> col -> board -> Maybe Cell
 getSafe r c board = Nothing
 
-neighborcoords :: row -> col -> [(row, col)], 
+neighborcoords :: row -> col -> [(row, col)] 
 --neighborcoords 0 0 = [(-1,-1), (-1,0),...] 8 things
 neighborcoords r c = [(r, c + 1), (r, c - 1),(r + 1, c + 1),(r + 1, c ),(r + 1, c - 1),(r - 1, c - 1),(r - 1, c),(r - 1, c + 1)]
 
 countMines :: [Maybe Cell] -> Int
 countMines Nothing = 0
 countMines (Just c:rest) = 1 + countMines rest
+
+--Carry out action
+performAction :: Action -> Board -> (Outcome, Board)
+performAction
 
 
 -- String to Act Helper and IO Action
@@ -143,4 +151,25 @@ makeAction = do
    case (stringAct x) of
       Just a -> return (row,column,a)
       Nothing -> makeAction
-                      
+      
+-- Build random board with bombs
+
+buildBoard :: RandomGen g => g -> Int -> Int -> Int -> (Board, g)
+buildBoard gen n h w = let (bombs, gen') = bombsLocations gen n h w
+                       in (boardFromBombList h w bombs, gen')
+
+bombLocation :: RandomGen g => g -> Int -> Int -> ((Row, Column), g)
+bombLocation gen numRows numCols = let (r, gen') = randomR (0, numRows - 1) gen
+                                       (c, gen'') = randomR (0, numCols - 1) gen'
+                                   in ((r, c), gen'')                                       
+
+bombsLocations :: RandomGen g => g -> Int -> Int -> Int -> ([(Row, Column)], g)
+bombsLocations gen 0 _ _             = ([], gen)
+bombsLocations gen n numRows numCols = let (p, gen') = bombLocation gen numRows numCols
+                                           (rest, gen'') = bombsLocations gen' (n - 1) numRows numCols
+                                       in if p `elem` rest
+                                          then bombsLocations gen'' n numRows numCols
+                                          else (p:rest, gen'')
+
+boardFromBombList :: Height -> Width -> [(Row, Column)] -> Board
+boardFromBombList h w ps = board h w (\r c -> if (r, c) `elem` ps then Mine else Safe)
