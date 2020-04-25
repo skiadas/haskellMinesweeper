@@ -101,23 +101,21 @@ addWalls s = end : middle ++ [end]
                       
                       
 
-getNeighbors :: Row -> Col -> Board -> Int
+getNeighbors :: Row -> Column -> Board -> Int
 getNeighbors r c board = length $ neighborcoords r c
 
 getSafe :: row -> col -> board -> Maybe Cell
 getSafe r c board = Nothing
 
-neighborcoords :: row -> col -> [(row, col)] 
+neighborcoords :: Num row => Num col => row -> col -> [(row, col)] 
 --neighborcoords 0 0 = [(-1,-1), (-1,0),...] 8 things
 neighborcoords r c = [(r, c + 1), (r, c - 1),(r + 1, c + 1),(r + 1, c ),(r + 1, c - 1),(r - 1, c - 1),(r - 1, c),(r - 1, c + 1)]
 
 countMines :: [Maybe Cell] -> Int
-countMines Nothing = 0
+countMines [Nothing] = 0
 countMines (Just c:rest) = 1 + countMines rest
 
---Carry out action
-performAction :: Action -> Board -> (Outcome, Board)
-performAction
+
 
 
 -- String to Act Helper and IO Action
